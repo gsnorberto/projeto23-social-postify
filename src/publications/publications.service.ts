@@ -1,11 +1,17 @@
 import { Injectable } from '@nestjs/common';
+import { Publication } from './entity/Publication';
+import { createPublicationDTO } from './dto/create-publication-dto';
 
 @Injectable()
 export class PublicationsService {
-  getPublications(body: any) {
-    throw new Error('Method not implemented.');
+  publications: Publication[] = [];
+
+  getPublications() {
+    return this.publications;
   }
-  addPublication(body: any) {
-    throw new Error('Method not implemented.');
+
+  addPublication({image, title, text, dateToPublish, published, socialMedia}: createPublicationDTO) {
+    const publication = new Publication(image, title, text, dateToPublish, published, socialMedia)
+    return this.publications.push(publication);
   }
 }
