@@ -1,6 +1,6 @@
 import { IsBoolean, IsDate, IsNotEmpty, IsString, Equals } from "class-validator";
 
-export class createPublicationDTO {
+export class CreatePublicationDTO {
    @IsString()
    @IsNotEmpty()
    image: string;
@@ -23,4 +23,7 @@ export class createPublicationDTO {
    @IsString()
    @IsNotEmpty()
    socialMedia: string;
+
+   @IsNotEmpty()
+   userId: number;
 }

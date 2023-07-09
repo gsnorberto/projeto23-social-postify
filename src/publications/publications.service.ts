@@ -1,17 +1,20 @@
-import { Injectable } from '@nestjs/common';
-import { Publication } from './entity/Publication';
-import { createPublicationDTO } from './dto/create-publication-dto';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { CreatePublicationDTO } from './dto/create-publication-dto';
+import { PublicationsRepository } from './repository/publication.repository';
 
 @Injectable()
 export class PublicationsService {
-  publications: Publication[] = [];
+  constructor(private readonly publicationsRepository: PublicationsRepository) {}
 
-  getPublications() {
-    return this.publications;
+  async getPublications() {
+    let userId = 1;
+    return await this.publicationsRepository.getPublications(userId);
   }
 
-  addPublication({image, title, text, dateToPublish, published, socialMedia}: createPublicationDTO) {
-    const publication = new Publication(image, title, text, dateToPublish, published, socialMedia)
-    return this.publications.push(publication);
+  async addPublication(data: CreatePublicationDTO) {
+    const publication = await this.publicationsRepository.getPublicationByTitle(data.title);
+    if(publication) throw new HttpException('Title is already in use', HttpStatus.UNPROCESSABLE_ENTITY);
+
+    await this.publicationsRepository.addPublication(data);
   }
 }
