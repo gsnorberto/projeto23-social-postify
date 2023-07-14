@@ -1,5 +1,3 @@
-import { HttpException, HttpStatus } from "@nestjs/common";
-
 export class User {
    constructor(
       private _name: string,
@@ -8,34 +6,28 @@ export class User {
       private _avatar: string
    ) {}
 
-   set name(name: string) {
-      if(name.length < 2) throw new HttpException('Invalid name', HttpStatus.UNPROCESSABLE_ENTITY);
-      this.name = name;
+   public get avatar(): string {
+      return this._avatar;
    }
-   get name(){
-      return this.name;
+   public set avatar(value: string) {
+      this._avatar = value;
    }
-
-   set email(email: string) {
-      this.email = email;
+   public get password(): string {
+      return this._password;
    }
-   get email(){
-      return this.email;
+   public set password(value: string) {
+      this._password = value;
    }
-
-   set password(password: string) {
-      if(password.length < 6 || password.length > 20) throw new HttpException('Invalid password', HttpStatus.UNPROCESSABLE_ENTITY)
-      this.password = password;
+   public get email(): string {
+      return this._email;
    }
-   get password(){
-      return this.password;
+   public set email(value: string) {
+      this._email = value;
    }
-
-   set avatar(avatar: string) {
-      if(avatar.length < 2) throw new HttpException('Invalid avatar', HttpStatus.UNPROCESSABLE_ENTITY)
-      this.avatar = avatar;
+   public get name(): string {
+      return this._name;
    }
-   get avatar(){
-      return this.avatar;
+   public set name(value: string) {
+      this._name = value;
    }
 }

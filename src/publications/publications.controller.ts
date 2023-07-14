@@ -1,18 +1,23 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { PublicationsService } from './publications.service';
 import { CreatePublicationDTO } from './dto/create-publication-dto';
+import { AuthGuard } from 'src/auth/authGuard/auth.guard';
+import { UserRequest } from 'src/auth/decorators/user.decorator';
+import { User } from '@prisma/client';
 
-@Controller('publications')
+@Controller('')
 export class PublicationsController {
   constructor(private readonly publicationsService: PublicationsService) {}
 
-  @Post()
-  addPublication(@Body() body:CreatePublicationDTO){
-    return this.publicationsService.addPublication(body)
+  @UseGuards(AuthGuard)
+  @Post('publication')
+  addPublication(@Body() body:CreatePublicationDTO, @UserRequest() user: User){
+    return this.publicationsService.addPublication(body, user.id)
   }
 
-  @Get()
-  getPublications(@Body() body:CreatePublicationDTO){
-    return this.publicationsService.getPublications()
+  @UseGuards(AuthGuard)
+  @Get('publications')
+  getPublications(@UserRequest() user: User){
+    return this.publicationsService.getPublications(user.id);
   }
 }

@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { AuthSigninDTO } from './dto/auth-signin.dto';
 import { AuthSignupDTO } from './dto/auth-signup.dto';
 import { UsersService } from 'src/users/users.service';
@@ -9,6 +9,9 @@ import { User } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
+   private AUDIENCE: string = "users"
+   private ISSUER: string = "Gabriel Norberto"
+
    constructor(
       private readonly usersService: UsersService,
       private readonly usersRepository: UsersRepository,
@@ -22,8 +25,8 @@ export class AuthService {
       }, {
          expiresIn: '7 days',
          subject: String(user.id),
-         issuer: 'Gabriel Norberto',
-         audience: 'users'
+         issuer: this.ISSUER,
+         audience: this.AUDIENCE
       });
 
       return { token };
@@ -32,13 +35,31 @@ export class AuthService {
    async signin({ email, password }: AuthSigninDTO) {
       const user = await this.usersRepository.findUserByEmail(email);
       if (!user) throw new UnauthorizedException("Email or Password Invalid");
+      
 
       const passwordIsValid = bcrypt.compareSync(password, user.password);
-      if (passwordIsValid) throw new UnauthorizedException("Email or Password Invalid");
+      console.log(passwordIsValid);
+      if (!passwordIsValid) throw new UnauthorizedException("Email or Password Invalid");
+
+      return this.createToken(user);
    }
 
    async signup(body: AuthSignupDTO) {
       const user = await this.usersService.addUser(body);
       return this.createToken(user);
+   }
+
+   checkToken(token: string) {
+      try {
+         const data = this.jwtService.verify(token, {
+            issuer: this.ISSUER,
+            audience: this.AUDIENCE
+         })
+
+         return data;
+      } catch (error) {
+         console.log('error');
+         throw new BadRequestException(error);
+      }
    }
 }

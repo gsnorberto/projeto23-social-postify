@@ -1,4 +1,4 @@
-import { IsBoolean, IsDate, IsNotEmpty, IsString, Equals } from "class-validator";
+import { IsBoolean, IsNotEmpty, IsString, Equals, IsDateString } from "class-validator";
 
 export class CreatePublicationDTO {
    @IsString()
@@ -13,7 +13,7 @@ export class CreatePublicationDTO {
    @IsNotEmpty()
    text: string;
 
-   @IsDate()
+   @IsDateString()
    dateToPublish: Date;
 
    @IsBoolean()
@@ -24,6 +24,5 @@ export class CreatePublicationDTO {
    @IsNotEmpty()
    socialMedia: string;
 
-   @IsNotEmpty()
    userId: number;
 }

@@ -6,7 +6,7 @@ import { CreateUserDTO } from './dto/create-user-dto';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post()
+  @Post('')
   addUser(@Body() body: CreateUserDTO){
     return this.usersService.addUser(body);
   }
