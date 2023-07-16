@@ -1,4 +1,4 @@
-import { ExecutionContext, HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreatePublicationDTO } from './dto/create-publication-dto';
 import { PublicationsRepository } from './repository/publication.repository';
 
@@ -13,7 +13,7 @@ export class PublicationsService {
   async addPublication(data: CreatePublicationDTO, userId: number) {
     const publication = await this.publicationsRepository.getPublicationByTitle(data.title);
     
-    if(publication) throw new HttpException('Title is already in use', HttpStatus.UNPROCESSABLE_ENTITY);
+    if(publication) throw new HttpException('Title is already in use', HttpStatus.CONFLICT);
     let date = new Date(data.dateToPublish);
 
     await this.publicationsRepository.addPublication({...data, userId, dateToPublish: date});

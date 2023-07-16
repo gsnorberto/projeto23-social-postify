@@ -11,7 +11,7 @@ export class UsersService {
     const hashPassword = bcrypt.hashSync(data.password, 10);
 
     const user = await this.usersRepository.findUserByEmail(data.email);
-    if (user) throw new HttpException('Email already exists', HttpStatus.UNPROCESSABLE_ENTITY);
+    if (user) throw new HttpException('Email already exists', HttpStatus.CONFLICT);
 
     return await this.usersRepository.addUser({ ...data, password: hashPassword });
   }
